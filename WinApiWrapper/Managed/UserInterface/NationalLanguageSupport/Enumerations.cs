@@ -1356,7 +1356,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
         /// <summary>
         /// Dimensione predefinita della carta.
         /// </summary>
-        public enum PaperSize
+        public enum PaperSize : short
         {
             /// <summary>
             /// Lettera Stati Uniti.

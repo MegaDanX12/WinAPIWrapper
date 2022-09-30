@@ -1900,7 +1900,7 @@ namespace WinApiWrapper.UserInterface.NationalLanguageSupport
         /// <summary>
         /// Dimensione predefinita della carta.
         /// </summary>
-        internal enum DefaultPaperSize
+        internal enum DefaultPaperSize : short
         {
             /// <summary>
             /// Lettera Stati Uniti.

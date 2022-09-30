@@ -58,6 +58,11 @@ namespace WinApiWrapper.GraphicsAndMultimedia.GraphicsDeviceInterface
         internal const int CCHDEVICENAME = 32;
 
         /// <summary>
+        /// Lunghezza del nome di una forma.
+        /// </summary>
+        internal const int CCHFORMNAME = 32;
+
+        /// <summary>
         /// Versione della struttura <see cref="Devices.DeviceGeneralStructures.DEVMODESCREEN"/> e <see cref="Devices.DeviceGeneralStructures.DEVMODEPRINTER"/>.
         /// </summary>
         internal const int DM_SPECVERSION = 1025;

@@ -291,7 +291,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     throw new ArgumentException("Invalid locale.", nameof(LocaleName));
                 }
             }
-            if (!EnumCalendarInfo(Callback, LocaleName, ID, null, TypeFlags, HMODULE.Zero))
+            if (!EnumCalendarInfo(Callback, LocaleName, ID, null, TypeFlags, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -306,7 +306,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
         /// <param name="Reserved">Riservato.</param>
         /// <param name="lParam">Parametro fornito dall'applicazione.</param>
         /// <returns>true per continuare l'enumerazione, false altrimenti.</returns>
-        private static bool CalendarEnumerationInfoCallback(LPWSTR CalendarInfo, CalendarID Calendar, string Reserved, HMODULE lParam)
+        private static bool CalendarEnumerationInfoCallback(LPWSTR CalendarInfo, CalendarID Calendar, string Reserved, IntPtr lParam)
         {
             EnumeratedInfo!.Add(CalendarInfo);
             return true;
@@ -377,7 +377,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     throw new ArgumentException("Invalid locale.", nameof(LocaleName));
                 }
             }
-            if (!EnumCalendarInfo(Callback, LocaleName, ID, null, TypeFlags, HMODULE.Zero))
+            if (!EnumCalendarInfo(Callback, LocaleName, ID, null, TypeFlags, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -397,7 +397,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
         /// <param name="Reserved">Riservato.</param>
         /// <param name="lParam">Parametro fornito dall'applicazione.</param>
         /// <returns>true per continuare l'enumerazione, false altrimenti.</returns>
-        private static bool AllCalendarEnumerationInfoCallback(LPWSTR CalendarInfo, CalendarID Calendar, string Reserved, HMODULE lParam)
+        private static bool AllCalendarEnumerationInfoCallback(LPWSTR CalendarInfo, CalendarID Calendar, string Reserved, IntPtr lParam)
         {
             if (AllCalendarsEnumeratedInfo!.ContainsKey(Calendar))
             {
@@ -516,7 +516,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 throw new ArgumentException("Invalid format.", nameof(Format));
             }
             EnumDateFormatsProc Callback = new(DateFormatsEnumerationCallback);
-            if (!EnumDateFormats(Callback, LocaleName, (NationalLanguageSupportEnumerations.DateFormat)Format, HMODULE.Zero))
+            if (!EnumDateFormats(Callback, LocaleName, (NationalLanguageSupportEnumerations.DateFormat)Format, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -558,7 +558,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 throw new ArgumentException("Invalid locale type.", nameof(LocaleType));
             }
             EnumLocalesProc Callback = new(SystemLocalesEnumerationCallback);
-            if (!EnumSystemLocales(Callback, (NationalLanguageSupportEnumerations.LocaleType)LocaleType, HMODULE.Zero, HMODULE.Zero))
+            if (!EnumSystemLocales(Callback, (NationalLanguageSupportEnumerations.LocaleType)LocaleType, IntPtr.Zero, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -572,7 +572,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
         /// <param name="Type">Tipo di località.</param>
         /// <param name="lParam">Parametro fornito dall'applicazione.</param>
         /// <returns>true per continuare l'enumerazione, false per terminarla.</returns>
-        private static bool SystemLocalesEnumerationCallback(string LocaleName, NationalLanguageSupportEnumerations.LocaleType Type, HMODULE lParam)
+        private static bool SystemLocalesEnumerationCallback(string LocaleName, NationalLanguageSupportEnumerations.LocaleType Type, IntPtr lParam)
         {
             LocalesData!.Add(new(LocaleName, (Enumerations.LocaleType)Type));
             return true;
@@ -594,7 +594,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 EnumeratedInfo.Clear();
             }
             EnumGeoNamesProc Callback = new(GeoNamesEnumerationCallback);
-            if (!EnumSystemGeoNames(SYSGEOTYPE.GEOCLASS_NATION, Callback, HMODULE.Zero))
+            if (!EnumSystemGeoNames(SYSGEOTYPE.GEOCLASS_NATION, Callback, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -674,7 +674,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 Format = NationalLanguageSupportEnumerations.TimeFormat.TIME_NOSECONDS;
             }
             EnumTimeFormatsProc Callback = new(TimeFormatEnumerationCallback);
-            if (!EnumTimeFormats(Callback, LocaleName, Format, HMODULE.Zero))
+            if (!EnumTimeFormats(Callback, LocaleName, Format, IntPtr.Zero))
             {
                 throw new Win32Exception(Marshal.GetLastPInvokeError());
             }
@@ -782,11 +782,11 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             if (!ReturnNumber)
             {
-                int BufferSize = NationalLanguageSupportFunctions.GetCalendarInfo(LocaleName, (CalendarID)Calendar, null, Flags, null, 0, HMODULE.Zero);
+                int BufferSize = NationalLanguageSupportFunctions.GetCalendarInfo(LocaleName, (CalendarID)Calendar, null, Flags, null, 0, IntPtr.Zero);
                 if (BufferSize is not 0)
                 {
                     StringBuilder InfoBuffer = new(BufferSize);
-                    if (NationalLanguageSupportFunctions.GetCalendarInfo(LocaleName, (CalendarID)Calendar, null, Flags, InfoBuffer, BufferSize, HMODULE.Zero) is > 0)
+                    if (NationalLanguageSupportFunctions.GetCalendarInfo(LocaleName, (CalendarID)Calendar, null, Flags, InfoBuffer, BufferSize, IntPtr.Zero) is > 0)
                     {
                         return InfoBuffer.ToString();
                     }
@@ -802,7 +802,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             else
             {
-                HMODULE NumberValuePointer = Marshal.AllocHGlobal(4);
+                IntPtr NumberValuePointer = Marshal.AllocHGlobal(4);
                 if (NationalLanguageSupportFunctions.GetCalendarInfo(LocaleName, (CalendarID)Calendar, null, Flags, null, 0, NumberValuePointer) is 2)
                 {
                     int Value = Marshal.ReadInt32(NumberValuePointer);
@@ -955,10 +955,10 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 }
             }
             uint Flags = 0;
-            HMODULE FormatStructurePointer;
+            IntPtr FormatStructurePointer;
             if (FormatInfo is null)
             {
-                FormatStructurePointer = HMODULE.Zero;
+                FormatStructurePointer = IntPtr.Zero;
                 if (UseSystemDefaults)
                 {
                     Flags |= LOCALE_NOUSEROVERRIDE;
@@ -1055,7 +1055,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     throw new ArgumentException("Invalid locale.", nameof(LocaleName));
                 }
             }
-            HMODULE DateStructurePointer;
+            IntPtr DateStructurePointer;
             uint Flags = 0;
             if (string.IsNullOrWhiteSpace(FormatString) && UseSystemDefaults)
             {
@@ -1063,7 +1063,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             if (!Date.HasValue)
             {
-                DateStructurePointer = HMODULE.Zero;
+                DateStructurePointer = IntPtr.Zero;
                 if (string.IsNullOrWhiteSpace(FormatString))
                 {
                     if (Format.HasValue)
@@ -1190,7 +1190,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     throw new ArgumentException("Invalid locale.", nameof(LocaleName));
                 }
             }
-            HMODULE DurationStructurePointer;
+            IntPtr DurationStructurePointer;
             uint Flags = 0;
             ulong Ticks = 0;
             if (string.IsNullOrWhiteSpace(FormatString) && UseSystemDefaults)
@@ -1199,7 +1199,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             if (!Duration.HasValue)
             {
-                DurationStructurePointer = HMODULE.Zero;
+                DurationStructurePointer = IntPtr.Zero;
                 if (!Seconds.HasValue)
                 {
                     throw new ArgumentNullException(nameof(Seconds), "Seconds can't be null if Duration is null.");
@@ -1271,7 +1271,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 throw new ArgumentNullException(nameof(LocationID), "The location ID can't be null.");
             }
-            HMODULE DataValuePointer = HMODULE.Zero;
+            IntPtr DataValuePointer = IntPtr.Zero;
             int BufferSize = 0;
             bool ValueIsFloatingPoint = false;
             if (Info is GeoInfo.Latitude or GeoInfo.Longitude)
@@ -1281,7 +1281,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             else
             {
-                BufferSize = GetGeoInfo(LocationID, (SYSGEOTYPE)Info, HMODULE.Zero, 0);
+                BufferSize = GetGeoInfo(LocationID, (SYSGEOTYPE)Info, IntPtr.Zero, 0);
                 if (BufferSize is 0)
                 {
                     throw new Win32Exception(Marshal.GetLastPInvokeError());
@@ -1416,7 +1416,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             int ValueAsNumber;
             string ValueAsString;
-            HMODULE Buffer;
+            IntPtr Buffer;
             uint Flags = (uint)Info;
             if (UseSystemDefaults)
             {
@@ -1426,7 +1426,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 if (!IsNumber && !IsBoolean)
                 {
-                    int BufferSize = NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, Flags, HMODULE.Zero, 0);
+                    int BufferSize = NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, Flags, IntPtr.Zero, 0);
                     if (BufferSize is not 0)
                     {
                         Buffer = Marshal.AllocHGlobal(BufferSize * 2);
@@ -1479,18 +1479,18 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                             int FirstDay = Marshal.ReadInt32(Buffer);
                             var BufferSize = FirstDay switch
                             {
-                                0 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME1, HMODULE.Zero, 0),
-                                1 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME2, HMODULE.Zero, 0),
-                                2 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME3, HMODULE.Zero, 0),
-                                3 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME4, HMODULE.Zero, 0),
-                                4 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME5, HMODULE.Zero, 0),
-                                5 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME6, HMODULE.Zero, 0),
-                                6 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME7, HMODULE.Zero, 0),
+                                0 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME1, IntPtr.Zero, 0),
+                                1 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME2, IntPtr.Zero, 0),
+                                2 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME3, IntPtr.Zero, 0),
+                                3 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME4, IntPtr.Zero, 0),
+                                4 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME5, IntPtr.Zero, 0),
+                                5 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME6, IntPtr.Zero, 0),
+                                6 => NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, (uint)GeoInfoType.LOCALE_SDAYNAME7, IntPtr.Zero, 0),
                                 _ => 0,
                             };
                             if (BufferSize is not 0)
                             {
-                                Buffer = Marshal.ReAllocHGlobal(Buffer, (HMODULE)(BufferSize * 2));
+                                Buffer = Marshal.ReAllocHGlobal(Buffer, (IntPtr)(BufferSize * 2));
                                 if (NationalLanguageSupportFunctions.GetLocaleInfo(LocaleName, Flags, Buffer, BufferSize) is not 0)
                                 {
                                     ValueAsString = Marshal.PtrToStringUni(Buffer, BufferSize);
@@ -1639,7 +1639,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             if (FormatInfo is not null)
             {
                 NUMBERFMT NumberFormatInfo = FormatInfo.ToStruct();
-                HMODULE StructurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(NumberFormatInfo));
+                IntPtr StructurePointer = Marshal.AllocHGlobal(Marshal.SizeOf(NumberFormatInfo));
                 Marshal.StructureToPtr(NumberFormatInfo, StructurePointer, false);
                 int BufferSize = GetNumberFormat(LocaleName, Flags, OriginalString, StructurePointer, null, 0);
                 if (BufferSize > 0)
@@ -1662,11 +1662,11 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             else
             {
-                int BufferSize = GetNumberFormat(LocaleName, Flags, OriginalString, HMODULE.Zero, null, 0);
+                int BufferSize = GetNumberFormat(LocaleName, Flags, OriginalString, IntPtr.Zero, null, 0);
                 if (BufferSize > 0)
                 {
                     StringBuilder FormattedString = new(BufferSize);
-                    if (GetNumberFormat(LocaleName, Flags, OriginalString, HMODULE.Zero, FormattedString, BufferSize) is not 0)
+                    if (GetNumberFormat(LocaleName, Flags, OriginalString, IntPtr.Zero, FormattedString, BufferSize) is not 0)
                     {
                         return FormattedString.ToString();
                     }
@@ -1755,7 +1755,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 throw new InvalidEnumArgumentException(nameof(Info), (int)Info, typeof(StringCharacterInfo));
             }
-            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, String, String.Length))
+            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, String, String.Length))
             {
                 throw new ArgumentException("The string is not a valid NLS string.", nameof(String));
             }
@@ -1935,7 +1935,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 Flags |= LOCALE_NOUSEROVERRIDE;
             }
-            HMODULE TimeStructurePointer = HMODULE.Zero;
+            IntPtr TimeStructurePointer = IntPtr.Zero;
             if (Time.HasValue)
             {
                 SYSTEMTIME TimeStructure = new()
@@ -1954,7 +1954,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 StringBuilder FormattedString = new(BufferSize);
                 if (GetTimeFormat(LocaleName, Flags, TimeStructurePointer, FormatString, FormattedString, BufferSize) is not 0)
                 {
-                    if (TimeStructurePointer != HMODULE.Zero)
+                    if (TimeStructurePointer != IntPtr.Zero)
                     {
                         Marshal.FreeHGlobal(TimeStructurePointer);
                     }
@@ -1962,7 +1962,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 }
                 else
                 {
-                    if (TimeStructurePointer != HMODULE.Zero)
+                    if (TimeStructurePointer != IntPtr.Zero)
                     {
                         Marshal.FreeHGlobal(TimeStructurePointer);
                     }
@@ -1971,7 +1971,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             }
             else
             {
-                if (TimeStructurePointer != HMODULE.Zero)
+                if (TimeStructurePointer != IntPtr.Zero)
                 {
                     Marshal.FreeHGlobal(TimeStructurePointer);
                 }
@@ -2179,14 +2179,14 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             };
             if (GetNLSVersion(SYSNLS_FUNCTION.COMPARE_STRING, LocaleName, ref VersionInfo))
             {
-                HMODULE Buffer;
+                IntPtr Buffer;
                 string ConvertedString;
                 int Hash;
                 byte[] SortKey;
                 if (Transformation.HasFlag(StringTransformationType.Hash))
                 {
                     Buffer = Marshal.AllocHGlobal(4);
-                    if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, 4, VersionInfo, HMODULE.Zero, HMODULE.Zero) is not 0)
+                    if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, 4, VersionInfo, IntPtr.Zero, IntPtr.Zero) is not 0)
                     {
                         Hash = Marshal.ReadInt32(Buffer);
                         Marshal.FreeHGlobal(Buffer);
@@ -2200,13 +2200,13 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 }
                 else
                 {
-                    int BufferSize = NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, HMODULE.Zero, 0, VersionInfo, HMODULE.Zero, HMODULE.Zero);
+                    int BufferSize = NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, IntPtr.Zero, 0, VersionInfo, IntPtr.Zero, IntPtr.Zero);
                     if (BufferSize is not 0)
                     {
                         if (Transformation.HasFlag(StringTransformationType.SortKey))
                         {
                             Buffer = Marshal.AllocHGlobal(BufferSize);
-                            if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, BufferSize, VersionInfo, HMODULE.Zero, HMODULE.Zero) is not 0)
+                            if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, BufferSize, VersionInfo, IntPtr.Zero, IntPtr.Zero) is not 0)
                             {
                                 SortKey = new byte[BufferSize];
                                 Marshal.Copy(Buffer, SortKey, 0, BufferSize);
@@ -2222,7 +2222,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                         else
                         {
                             Buffer = Marshal.AllocHGlobal(BufferSize * 2);
-                            if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, BufferSize, VersionInfo, HMODULE.Zero, HMODULE.Zero) is not 0)
+                            if (NationalLanguageSupportFunctions.ConvertString(LocaleName, Flags, SourceString, SourceString.Length, Buffer, BufferSize, VersionInfo, IntPtr.Zero, IntPtr.Zero) is not 0)
                             {
                                 ConvertedString = Marshal.PtrToStringUni(Buffer, BufferSize);
                                 Marshal.FreeHGlobal(Buffer);
@@ -2312,7 +2312,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 throw new ArgumentNullException(nameof(OriginalString), "No string provided.");
             }
-            if (IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, OriginalString, OriginalString.Length))
+            if (IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, OriginalString, OriginalString.Length))
             {
                 int BufferSize = ConvertString2((StringMappingTransformation2)Transformation, OriginalString, -1, null, 0);
                 if (BufferSize is not 0)
@@ -2399,7 +2399,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 Flags |= (uint)SearchFilter;
             }
-            int ValueStartingIndex = NationalLanguageSupportFunctions.FindString(LocaleName, Flags, SourceString, SourceString.Length, ValueToFind, ValueToFind.Length, out FoundStringSize, HMODULE.Zero, HMODULE.Zero, HMODULE.Zero);
+            int ValueStartingIndex = NationalLanguageSupportFunctions.FindString(LocaleName, Flags, SourceString, SourceString.Length, ValueToFind, ValueToFind.Length, out FoundStringSize, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero);
             if (ValueStartingIndex is not -1)
             {
                 return ValueStartingIndex;
@@ -2501,7 +2501,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     throw new ArgumentException("Invalid locale.", nameof(LocaleName));
                 }
             }
-            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, String1, String1.Length) || !IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, String2, String2.Length))
+            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, String1, String1.Length) || !IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, String2, String2.Length))
             {
                 throw new FormatException("One of the provided strings is not defined in NLS.");
             }
@@ -2514,7 +2514,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                 };
                 if (GetNLSVersion(SYSNLS_FUNCTION.COMPARE_STRING, LocaleName, ref VersionInfo))
                 {
-                    StringComparisonResult Result = NationalLanguageSupportFunctions.CompareString(LocaleName, Flags, String1, String1.Length, String2, String2.Length, VersionInfo, HMODULE.Zero, HMODULE.Zero);
+                    StringComparisonResult Result = NationalLanguageSupportFunctions.CompareString(LocaleName, Flags, String1, String1.Length, String2, String2.Length, VersionInfo, IntPtr.Zero, IntPtr.Zero);
                     if (Result is not StringComparisonResult.Failed)
                     {
                         return (int)Result - 2;
@@ -2554,7 +2554,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
             {
                 throw new ArgumentNullException(nameof(String2), "One of the strings to compare has not been provided.");
             }
-            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, String1, String1.Length) || !IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, HMODULE.Zero, String2, String2.Length))
+            if (!IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, String1, String1.Length) || !IsNLSDefinedString(SYSNLS_FUNCTION.COMPARE_STRING, 0, IntPtr.Zero, String2, String2.Length))
             {
                 throw new FormatException("One of the provided strings is not defined in NLS.");
             }
@@ -2664,7 +2664,7 @@ namespace WinApiWrapper.Managed.UserInterface.NationalLanguageSupport
                     }
                 }
             }
-            _ = SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, HMODULE.Zero, HMODULE.Zero, SendMessageBehaviour.SMTO_NORMAL, 3000, out _);
+            _ = SendMessageTimeout(HWND_BROADCAST, WM_SETTINGCHANGE, IntPtr.Zero, IntPtr.Zero, SendMessageBehaviour.SMTO_NORMAL, 3000, out _);
         }
 
         /// <summary>
