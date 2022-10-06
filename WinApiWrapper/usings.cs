@@ -53,3 +53,4 @@ global using ULONG_PTR = System.IntPtr;
 global using LANGID = System.UInt16;
 global using HMODULE = System.IntPtr;
 global using UINT_PTR = System.UIntPtr;
+global using HGLOBAL = System.IntPtr;

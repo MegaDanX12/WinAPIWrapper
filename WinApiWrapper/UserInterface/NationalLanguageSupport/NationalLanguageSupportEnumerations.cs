@@ -1902,6 +1902,7 @@ namespace WinApiWrapper.UserInterface.NationalLanguageSupport
         /// </summary>
         internal enum DefaultPaperSize : short
         {
+            None,
             /// <summary>
             /// Lettera Stati Uniti.
             /// </summary>

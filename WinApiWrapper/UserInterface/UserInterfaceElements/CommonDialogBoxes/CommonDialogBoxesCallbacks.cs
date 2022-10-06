@@ -13,7 +13,7 @@
         /// <param name="wParam">Informazioni addizionali relative al messaggio.</param>
         /// <param name="lParam">Informazioni addizionali relative al messaggio.</param>
         /// <returns>0 per permette alla procedura predefinita l'elaborazione del messaggio, diverso da 0 per fare in modo che la procedura predefinita ignori il messaggio.</returns>
-        /// <remarks>Se il messaggio è <see cref="UserInputAndMessaging.WindowsAndMessages.Windows.WindowMessages.WM_INITDIALOG"/>, lParam è un puntatore a una struttura <see cref="CommonDialogBoxesStructures.CHOOSECOLOR"/> oppure <see cref="CommonDialogBoxesStructures.CHOOSEFONT"/>.</remarks>
+        /// <remarks>Se il messaggio è <see cref="UserInputAndMessaging.WindowsAndMessages.Windows.WindowMessages.WM_INITDIALOG"/>, lParam è un puntatore a una struttura <see cref="CommonDialogBoxesStructures.CHOOSECOLOR"/>, <see cref="CommonDialogBoxesStructures.CHOOSEFONT"/>, <see cref="CommonDialogBoxesStructures.FINDREPLACE"/>, <see cref="CommonDialogBoxesStructures.PAGESETUPDLG"/>.</remarks>
         internal delegate UINT_PTR NotificationHandlerProcedure(HWND DialogHandle, uint Message, WPARAM wParam, LPARAM lParam);
     }
 }
