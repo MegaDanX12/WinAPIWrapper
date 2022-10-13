@@ -113,5 +113,23 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
         [DllImport("Comdlg32.dll", EntryPoint = "PageSetupDlg", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static extern bool OpenPageSetup(ref PAGESETUPDLG DialogData);
+
+        /// <summary>
+        /// Visualizza una finestra di dialogo "Stampa" che permette all'utente di specificare le proprietà di un lavoro di stampa.
+        /// </summary>
+        /// <param name="DialogData">Puntatore a struttura <see cref="PRINTDLG"/> che contiene informazioni di inizializzazione della finestra di dialogo.</param>
+        /// <returns><see cref="S_OK"/> se l'operazione è riuscita, uno codice di errore COM in caso contrario.</returns>
+        /// <remarks>Tra i possibili codici di errore ci sono i seguenti:<br/><br/>
+        /// <see cref="E_OUTOFMEMORY"/> (memoria insufficiente)<br/>
+        /// <see cref="E_INVALIDARG"/> (parametro non valido)<br/>
+        /// <see cref="E_POINTER"/> (puntatore non valido)<br/>
+        /// <see cref="E_HANDLE"/> (handle non valido)<br/>
+        /// <see cref="E_FAIL"/> (errore non specificato)<br/><br/>
+        /// I valori di <see cref="PRINTDLG.DevModeMemoryObject"/> e <see cref="PRINTDLG.DevNamesMemoryObject"/> di <paramref name="DialogData"/> possono cambiare dopo il completamento dell'esecuzione della funzione.<br/>
+        /// Assicurarsi di liberare la memoria allocata per questi campi.<br/><br/>
+        /// Se <see cref="PRINTDLG.InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_RETURNDC"/> ma non include <see cref="PrintDialogInitializationOptions.PD_USEDEVMODECOPIESANDCOLLATE"/>, la funzione potrebbe restituire un valore non corretto per il numero di copie.<br/>
+        /// Per evitare questo, chiamare questa funzione sempre con le opzioni <see cref="PrintDialogInitializationOptions.PD_RETURNDC"/> e <see cref="PrintDialogInitializationOptions.PD_USEDEVMODECOPIESANDCOLLATE"/> incluse in <see cref="PRINTDLG.InitializationOptions"/></remarks>
+        [DllImport("Comdlg32.dll", EntryPoint = "PrintDlgEx", SetLastError = true)]
+        internal static extern HRESULT ShowPrintDialog(IntPtr DialogData);
     }
 }

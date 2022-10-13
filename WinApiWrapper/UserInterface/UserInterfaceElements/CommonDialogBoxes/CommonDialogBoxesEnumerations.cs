@@ -1,4 +1,5 @@
-﻿using static WinApiWrapper.Devices.DeviceGeneralStructures;
+﻿using static WinApiWrapper.Devices.DeviceGeneralEnumerations;
+using static WinApiWrapper.Devices.DeviceGeneralStructures;
 using static WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes.CommonDialogBoxesStructures;
 
 namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
@@ -409,6 +410,7 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
         /// <summary>
         /// Opzioni di inizializzazione della finestra "Imposta pagina".
         /// </summary>
+        [Flags]
         internal enum PageSetupDialogInitializationOptions
         {
             /// <summary>
@@ -478,7 +480,7 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
             /// <summary>
             /// Non viene visualizzata la finestra di dialogo.
             /// </summary>
-            /// <remarks>Al posto di visualizzare la finestra i campi <see cref="PAGESETUPDLG.DevNamesMemoryHandle"/> e <see cref="PAGESETUPDLG.DevModeMemoryHandle"/> sono impostati per la stampante predefinita.<br/>
+            /// <remarks>Al posto di visualizzare la finestra i campi <see cref="PAGESETUPDLG.DevNamesMemoryObject"/> e <see cref="PAGESETUPDLG.DevModeMemoryObject"/> sono impostati per la stampante predefinita.<br/>
             /// Entrambi i campi devono essere nulli.</remarks>
             PSD_RETURNDEFAULT = 1024,
             /// <summary>
@@ -486,6 +488,132 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
             /// </summary>
             /// <remarks>Deve essere specificata la finestra che riceve il messaggio registrato <see cref="CommonDialogBoxesNotifications.HELPMSGSTRING"/>.</remarks>
             PSD_SHOWHELP = 2048
+        }
+
+        /// <summary>
+        /// Opzioni di inizializzazione della finestra di dialogo "Stampa".
+        /// </summary>
+        [Flags]
+        internal enum PrintDialogInitializationOptions
+        {
+            /// <summary>
+            /// Il pulsante "Tutte" è selezionato.
+            /// </summary>
+            PD_ALLPAGES,
+            /// <summary>
+            /// Il checkbox "Fascicola" è selezionato.
+            /// </summary>
+            PD_COLLATE = 16,
+            /// <summary>
+            /// Il pulsante "Pagina attuale" è selezionato.
+            /// </summary>
+            PD_CURRENTPAGE = 4194304,
+            /// <summary>
+            /// Disabilita il checkbox "Stampa su file".
+            /// </summary>
+            PD_DISABLEPRINTTOFILE = 524288,
+            /// <summary>
+            /// Indica di utilizzare il modello di finestra di dialogo presente nel modulo indicato con il nome indicato.
+            /// </summary>
+            /// <remarks>Il modello sostituisce la parte inferiore della pagina "Generale".</remarks>
+            PD_ENABLEPRINTTEMPLATE = 16384,
+            /// <summary>
+            /// Indica di usare il modello precaricato di finestra di dialogo indicato.
+            /// </summary>
+            /// <remarks>Il modello sostituisce la parte inferiore della pagina "Generale".</remarks>
+            PD_ENABLEPRINTTEMPLATEHANDLE = 65536,
+            /// <summary>
+            /// Indica di escludere le parti indicate dalle pagine delle proprietà del driver della stampante.
+            /// </summary>
+            PD_EXCLUSIONFLAGS = 16777216,
+            /// <summary>
+            /// Nasconde il checkbox "Stampa su file".
+            /// </summary>
+            PD_HIDEPRINTTOFILE = 1048576,
+            /// <summary>
+            /// Disabilita il pulsante "Pagina corrente".
+            /// </summary>
+            PD_NOCURRENTPAGE = 8388608,
+            /// <summary>
+            /// Disabilita il pulsante "Pagine" e i controlli di modifica associati.
+            /// </summary>
+            /// <remarks>Questa opzione causa l'apparizione del checkbox "Fascicola".</remarks>
+            PD_NOPAGENUMS = 8,
+            /// <summary>
+            /// Disabilita il pulsante "Selezione".
+            /// </summary>
+            PD_NOSELECTION = 4,
+            /// <summary>
+            /// Impedisce la visualizzazione di un messaggio quando si verifica un errore.
+            /// </summary>
+            PD_NOWARNING = 128,
+            /// <summary>
+            /// Il pulsante "Pagine" è selezionato.
+            /// </summary>
+            /// <remarks>Se questa opzione è inclusa, <see cref="PRINTDLG.PageRanges"/> indica gli insiemi di pagine specificati dall'utente.</remarks>
+            PD_PAGENUMS = 2,
+            /// <summary>
+            /// Il checkbox "Stampa su file" è selezionato.
+            /// </summary>
+            /// <remarks>Se questa opzione è inclusa, <see cref="DEVNAMES.OutputOffset"/> contiene la string "FILE:", utilizzare questa stringa durante l'avvio dell'operazione di stampa per far scegliere all'utente il nome del file di output.</remarks>
+            PD_PRINTTOFILE = 32,
+            /// <summary>
+            /// Causa la restituzione di un contesto dispositivo corrispondente alla selezione fatta dall'utente nella finestra di dialogo.
+            /// </summary>
+            /// <remarks>Il contesto viene restituito in <see cref="PRINDLG.DeviceContext"/></remarks>
+            PD_RETURNDC = 256,
+            /// <summary>
+            /// La finestra di dialogo non viene visualizzata.
+            /// </summary>
+            /// <remarks>Al posto di visualizzare la finestra i campi <see cref="PRINTDLG.DevNamesMemoryObject"/> e <see cref="PRINTDLG.DevModeMemoryObject"/> sono impostati per la stampante predefinita.<br/>
+            /// Entrambi i campi devono essere nulli.</remarks>
+            PD_RETURNDEFAULT = 1024,
+            /// <summary>
+            /// Restituisce un contesto d'informazione.
+            /// </summary>
+            /// <remarks>Il contesto viene restituito <see cref="PRINTDLG.DeviceContext"/>.</remarks>
+            PD_RETURNIC = 512,
+            /// <summary>
+            /// Il pulsante "Selezione" è selezionato.
+            /// </summary>
+            PD_SELECTION = 1,
+            /// <summary>
+            /// Indica se l'applicazione supporta copie multiple e fascicolazione.
+            /// </summary>
+            /// <remarks>Se questa opzione è impostata, l'applicazione non supporta la funzionalità, in questo caso <see cref="PRINTDLG.Copies"/> ha sempre valore 1 e <see cref="PD_COLLATE"/> non è impostato.<br/>
+            /// Se questa opzione non è impostata, l'applicazione è responsabile per la stampa e la fascicolazione di copie multiple, in questo caso <see cref="PRINTDLG.Copies"/> inidca il numero di copie e l'impostazione di <see cref="PD_COLLATE"/> indica se deve essere eseguita la fascicolazione.<br/><br/>
+            /// Se questa opzione è impostata e il driver non supporta copie multiple, il controllo di modifica "Copie" è disabilitato, se il driver non supporta la fascicolazione il checkbox "Fascicola" è disattivato.<br/><br/>
+            /// <see cref="DEVMODEPRINTER.Copies"/> e <see cref="DEVMODEPRINTER.Collate"/> indicano le informazioni sul numero di copie il supporto della fascicolazione usate dal driver della stampante.<br/>
+            /// Se questa opzione è impostata e il driver supporta copie multiple, <see cref="DEVMODEPRINTER.Copies"/> indica il numero di copie da stampare, se il driver supporta la fascicolazione <see cref="DEVMODEPRINTER.Collate"/> indica se l'utente vuole che venga eseguita.<br/>
+            /// Se questa opzione non è impostata, <see cref="DEVMODEPRINTER.Copies"/> ha sempre valore 1 e <see cref="DEVMODEPRINTER.Collate"/> ha sempre valore <see cref="CollateSetting.DMCOLLATE_FALSE"/> (0).</remarks>
+            PD_USEDEVMODECOPIESANDCOLLATE = 262144,
+            /// <summary>
+            /// Forza la finestra di dialogo a usare il modello grande per la pagina "Generale".
+            /// </summary>
+            /// <remarks>Il modello grande fornisce più spazio per le applicazione per specificare un modello personalizzato per la parte inferiore della pagina.</remarks>
+            PD_USELARGETEMPLATE = 268435456
+        }
+
+        /// <summary>
+        /// Risultato della finestra di dialogo "Stampa".
+        /// </summary>
+        internal enum PrintDialogResult
+        {
+            /// <summary>
+            /// L'utente ha premuto il tasto "Annulla".
+            /// </summary>
+            PD_RESULT_CANCEL,
+            /// <summary>
+            /// L'utente ha premuto il pulsante "Stampa".
+            /// </summary>
+            /// <remarks>La struttura <see cref="CommonDialogBoxesStructures.PRINTDLG"/> contiene le informazioni specificate dall'utente.</remarks>
+            PD_RESULT_PRINT,
+            /// <summary>
+            /// L'utente ha premuto il pulsante "Applica" e poi il pulsante "Annulla".
+            /// </summary>
+            /// <remarks>Questo indica che l'utente vuoi applicare i cambiamenti nelle proprietà ma non vuole ancora stampare.<br/><br/>
+            /// La struttura <see cref="CommonDialogBoxesStructures.PRINTDLG"/> contiene le informazioni specificate dall'utente alla pressione del pulsante "Applica".</remarks>
+            PD_RESULT_APPLY
         }
     }
 }

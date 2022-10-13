@@ -1,4 +1,5 @@
 ﻿using ABI.Windows.Foundation;
+using static WinApiWrapper.Devices.DeviceGeneralStructures;
 using static WinApiWrapper.General.GeneralStructures;
 using static WinApiWrapper.GraphicsAndMultimedia.GraphicsDeviceInterface.Fonts.FontStructures;
 using static WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes.CommonDialogBoxesCallbacks;
@@ -245,7 +246,7 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
         }
 
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
         internal struct PAGESETUPDLG
         {
             /// <summary>
@@ -320,6 +321,146 @@ namespace WinApiWrapper.UserInterface.UserInterfaceElements.CommonDialogBoxes
             /// Handle a un oggetto di memoria che contiene il modello della finestra di dialogo.
             /// </summary>
             public HGLOBAL PageSetupTemplate;
+        }
+
+        /// <summary>
+        /// Informazioni di inizializzazione della finestra di dialogo "Stampa".
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+        internal struct PRINTDLG
+        {
+            /// <summary>
+            /// Dimensione, in byte, della struttura.
+            /// </summary>
+            public DWORD StructureSize;
+            /// <summary>
+            /// Handle alla proprietaria delaa finestra di dialogo.
+            /// </summary>
+            public HWND OwnerHandle;
+            /// <summary>
+            /// Handle all'oggetto di memoria mobile globale che contiene una struttura <see cref="DEVMODEPRINTER"/>.
+            /// </summary>
+            /// <remarks>Se questo campo non è nullo, il blocco di memoria allocato deve contenere una struttura <see cref="DEVMODEPRINTER"/> inizializzata.<br/>
+            /// I dati in questa struttura sono usati per inizializzare i controlli nella finestra, alla chiusura di essa, la struttura contiene l'input dell'utente.<br/><br/>
+            /// Se questo campo è nullo, l'allocazione della memoria e l'inizializzazione della struttura sono eseguiti automaticamente con l'input dell'utente, il campo viene impostato a un handle all'oggetto di memoria.</remarks>
+            public HGLOBAL DevModeMemoryObject;
+            /// <summary>
+            /// Handle all'oggetto di memoria mobile globale che contiene una struttura <see cref="DEVNAMES"/>.
+            /// </summary>
+            /// <remarks>Se questo campo non è nullo, il blocco di memoria allocato deve contenere una struttura <see cref="DEVNAMES"/> inizializzata.<br/>
+            /// I dati in questa struttura sono usati per inizializzare i controlli nella finestra, alla chiusura di essa, la struttura contiene informazioni sulla stampante scelta.<br/><br/>
+            /// Se questo campo è nullo, l'allocazione della memoria e l'inizializzazione della struttura sono eseguiti automaticamente con l'input dell'utente, il campo viene impostato a un handle all'oggetto di memoria.</remarks>
+            public HGLOBAL DevNamesMemoryObject;
+            /// <summary>
+            /// Handle al contesto dispositivo o al contesto d'informazione, in base al valore di <see cref="InitializationOptions"/>.
+            /// </summary>
+            /// <remarks>Se <see cref="InitializationOptions"/> contiene <see cref="PrintDialogInitializationOptions.PD_RETURNDC"/>, il campo è un handle a un contesto dispositivo.<br/>
+            /// Se <see cref="InitializationOptions"/> contiene <see cref="PrintDialogInitializationOptions.PD_RETURNIC"/>, il campo è un handle a un contesto d'informazione.<br/><br/>
+            /// Se <see cref="InitializationOptions"/> contiene entrambe le opzioni, <see cref="PrintDialogInitializationOptions.PD_RETURNDC"/> ha priorità.</remarks>
+            public HDC DeviceContextHandle;
+            /// <summary>
+            /// Opzioni di inizializzazione della finestra di dialogo.
+            /// </summary>
+            public PrintDialogInitializationOptions InitializationOptions;
+            /// <summary>
+            /// 
+            /// </summary>
+            public DWORD Flags2;
+            /// <summary>
+            /// Indica se escludere i controlli "Copie" e "Fascicola" dalle pagine di proprietà del driver.
+            /// </summary>
+            public DWORD ExclusionFlags;
+            /// <summary>
+            /// In input, indica il numero iniziale di insiemi di pagine nell'array puntato da <see cref="PageRanges"/>, in output, indica il numero di insiemi di pagine specificati dall'utente presenti nell'array.
+            /// </summary>
+            /// <remarks>Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_NOPAGENUMS"/>, il valore di questo campo non è valido.</remarks>
+            public DWORD PageRangesCount;
+            /// <summary>
+            /// Dimensione dell'array puntato da <see cref="PageRanges"/>.
+            /// </summary>
+            /// <remarks>Questo valore indica il numero massimo di insiemi di pagine che possono essere inclusi nell'array.<br/>
+            /// Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_NOPAGENUMS"/>, questo valore non è valido, in caso contrario, questo valore deve essere maggiore di 0.</remarks>
+            public DWORD MaxPageRangesCount;
+            /// <summary>
+            /// Puntatore a un buffer che contiene un'array di strutture <see cref="PRINTPAGERANGE"/>.
+            /// </summary>
+            /// <remarks>In input, l'array contiene gli insiemi di pagine iniziali ma visualizzare nel controllo di modifica "Pagine".<br/>
+            /// In output, l'array contiene gli insiemi di pagine specificati dall'utente.<br/><br/>
+            /// Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_NOPAGENUMS"/>, questo valore non è valido, in caso contrario, questo campo non deve essere nullo.</remarks>
+            public IntPtr PageRanges;
+            /// <summary>
+            /// Il valore minimo per gli insiemi di pagine specificati nel controllo di modifica "Pagine".
+            /// </summary>
+            /// <remarks>Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_NOPAGENUMS"/>, questo valore non è valido.</remarks>
+            public DWORD MinimumPageRanges;
+            /// <summary>
+            /// Il valore massimo per gli insiemi di pagine specificati nel controllo di modifica "Pagine".
+            /// </summary>
+            /// <remarks>Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_NOPAGENUMS"/>, questo valore non è valido.</remarks>
+            public DWORD MaximumPageRanges;
+            /// <summary>
+            /// Numero iniziale di copie presente nel controllo di modifica "Copie" quando <see cref="DevModeMemoryObject"/> è nullo.
+            /// </summary>
+            /// <remarks>Se <see cref="DevModeMemoryObject"/> non è nullo, <see cref="DEVMODEPRINTER.Copies"/> contiene il valore iniziale.<br/><br/>
+            /// In output, questo campo contiene il numero effettivo di copie che l'applicazione deve stampare.<br/>
+            /// Il valore dipende dal responsabile dell'esecuzione dell'operazione.<br/><br/>
+            /// Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_USEDEVMODECOPIESANDCOLLATE"/>, questo campo ha sempre valore 1 in output e il driver della stampante è responsabile della stampa di copie multiple.<br/>
+            /// In caso contrario, l'applicazione è responsabile dell'operazione.</remarks>
+            public DWORD CopiesCount;
+            /// <summary>
+            /// Handle al modulo o all'oggetto di memoria che contiene un modello di finestra di dialogo.
+            /// </summary>
+            /// <remarks>Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_ENABLEPRINTTEMPLATE"/>, questo campo è un handle all'applicazione o al modulo che contiene il modello di finestra di dialogo il cui nome è specificato da <see cref="PrintDialogTemplateName"/>.<br/>
+            /// Se <see cref="InitializationOptions"/> include <see cref="PrintDialogInitializationOptions.PD_ENABLEPRINTTEMPLATEHANDLE"/>, questo campo è un handle a un oggetto di memoria che contiene il modello di finestra di dialogo.<br/>
+            /// Se nessuna delle opzioni è impostata, questo campo dovrebbe essere nullo.</remarks>
+            public HINSTANCE ModuleHandle;
+            /// <summary>
+            /// Nome del modello di finestra di dialogo presente nel modulo identificato da <see cref="ModuleHandle"/>.
+            /// </summary>
+            public string PrintDialogTemplateName;
+            /// <summary>
+            /// Puntatore a un oggetto di callback definito dall'applicazione.
+            /// </summary>
+            /// <remarks>L'oggetto dovrebbe contenere una classe IPrintDialogCallback per ricevere i messaggi dalle finestre di dialogo figlie nella parte inferiore della pagina "Generale".<br/>
+            /// L'oggetto di callback dovrebbe anche contenere una classe IObjectWithSite per ricevere un puntatore all'interfaccia IPrintDialogServices.<br/><br/>
+            /// Se non è necessaria nessuna informazione di callback, impostare a <see cref="IntPtr.Zero"/> questo campo.</remarks>
+            public IntPtr CallbackObjectPointer;
+            /// <summary>
+            /// Numero di handle presenti nell'array puntato da <see cref="PropertyPageHandles"/>.
+            /// </summary>
+            public DWORD PropertyPagesCount;
+            /// <summary>
+            /// Array di handle a pagine di proprietà da aggiungere alla finestra di dialogo "Stampa".
+            /// </summary>
+            /// <remarks>Alla chiusura della finestra di dialogo tutti gli handle nell'array non sono più validi.<br/>
+            /// Se <see cref="PropertyPagesCount"/> è 0, questo campo dovrebbe essere nullo.</remarks>
+            public IntPtr PropertyPageHandles;
+            /// <summary>
+            /// La pagine di proprietà che deve essere inizialmente visualizzata.
+            /// </summary>
+            /// <remarks>Per visualizzare la pagina "Generale" specificare <see cref="CommonDialogBoxesCostants.START_PAGE_GENERAL"/>, altrimenti specificare l'indica su base 0 nell'array puntato da <see cref="PropertyPageHandles"/>.</remarks>
+            public DWORD InitialPropertyPageIndex;
+            /// <summary>
+            /// Risultato della finestra di dialogo.
+            /// </summary>
+            /// <remarks>In input, questo membro deve avere valore 0, in output, questo campo è valido solo se l'operazione è riuscita.</remarks>
+            public PrintDialogResult DialogResult;
+        }
+
+        /// <summary>
+        /// Rappresenta un insieme di pagine di un lavoro di stampa.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct PRINTPAGERANGE
+        {
+            /// <summary>
+            /// Prima pagina dell'insieme.
+            /// </summary>
+            public DWORD RangeFirstPage;
+            /// <summary>
+            /// Ultima pagina dell'insieme.
+            /// </summary>
+            public DWORD RangeLastPage;
         }
     }
 }
